@@ -1,0 +1,45 @@
+{
+  "base_url": "https://netgig.online",
+  "pages": [
+    {
+      "slug": "hourly-planner",
+      "title": "Free Hourly Planner - Build and Print a Daily Schedule",
+      "h1": "Hourly Planner",
+      "description": "Make an hour-by-hour schedule in your browser and print it. No account, no download, no setup.",
+      "start": "08:00",
+      "end": "18:00",
+      "interval": 30,
+      "variant": "standard"
+    },
+    {
+      "slug": "hourly-schedule-template",
+      "title": "Hourly Schedule Template - Free, Editable, Printable",
+      "h1": "Hourly Schedule Template",
+      "description": "Fill in an hourly schedule template online and print it straight away. Set your own hours and intervals. No sign up needed.",
+      "start": "08:00",
+      "end": "18:00",
+      "interval": 60,
+      "variant": "standard"
+    },
+    {
+      "slug": "daily-hourly-schedule",
+      "title": "Daily Hourly Schedule Maker - Free Printable Planner",
+      "h1": "Daily Hourly Schedule",
+      "description": "Plan your full day hour by hour, from morning to night. Print a clean daily schedule you can write on. Free, no account.",
+      "start": "07:00",
+      "end": "22:00",
+      "interval": 60,
+      "variant": "standard"
+    },
+    {
+      "slug": "hour-by-hour-schedule",
+      "title": "Hour by Hour Schedule Planner - Free and Printable",
+      "h1": "Hour by Hour Schedule",
+      "description": "Break your day into hourly blocks and print the result. Built for time blocking. No download, no account, works in any browser.",
+      "start": "06:00",
+      "end": "22:00",
+      "interval": 60,
+      "variant": "standard"
+    }
+  ]
+}

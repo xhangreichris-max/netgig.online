@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>netgig.online – Free Productivity Tools</title>
+  <meta name="description" content="Free online productivity tools. No accounts, no downloads. Hourly planners, schedule templates, and more.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://netgig.online/">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink:    #16161A;
+      --paper:  #FBFBF9;
+      --rule:   #DADAD4;
+      --quiet:  #6B6B66;
+      --pen:    #0369A1;
+      --font-text: 'IBM Plex Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-text);
+      font-size: 1rem;
+      line-height: 1.5;
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .tagline {
+      color: var(--quiet);
+      margin-bottom: 2rem;
+    }
+
+    .tools-list {
+      list-style: none;
+    }
+
+    .tools-list li {
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .tools-list li:last-child {
+      border-bottom: none;
+    }
+
+    .tools-list a {
+      display: block;
+      padding: 1rem 0;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .tools-list a:hover {
+      color: var(--pen);
+    }
+
+    .tools-list .tool-name {
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+
+    .tools-list .tool-desc {
+      color: var(--quiet);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--quiet);
+      font-size: 0.8125rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>netgig.online</h1>
+  <p class="tagline">Free productivity tools. No accounts. No downloads.</p>
+
+  <ul class="tools-list">
+{{TOOL_LINKS}}
+  </ul>
+
+  <footer>
+    <p>netgig.online</p>
+  </footer>
+
+</body>
+</html>
