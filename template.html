@@ -8,19 +8,30 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="{{CANONICAL_URL}}">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon-180x180.png">
+
   <!-- Open Graph -->
   <meta property="og:title" content="{{TITLE}}">
   <meta property="og:description" content="{{DESCRIPTION}}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{CANONICAL_URL}}">
+  <meta property="og:image" content="https://netgig.online/assets/og-image-1200x630.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/webp">
+  <meta property="og:image" content="https://netgig.online/assets/og-image-1200x630.svg">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="../../src/style.css">
+  <link rel="stylesheet" href="/src/style.css">
 
   <!-- JSON-LD -->
   <script type="application/ld+json">
@@ -29,69 +40,307 @@
 </head>
 <body>
 
-  <header class="site-header">
-    <h1>{{H1}}</h1>
-    <span class="header-date"></span>
-  </header>
+  <div class="app-shell">
 
-  <div class="controls">
-    <label for="start-time" class="sr-only">Start time</label>
-    <select id="start-time">
-      <option value="05:00">05:00</option>
-      <option value="06:00">06:00</option>
-      <option value="07:00">07:00</option>
-      <option value="08:00">08:00</option>
-      <option value="09:00">09:00</option>
-      <option value="10:00">10:00</option>
-      <option value="11:00">11:00</option>
-      <option value="12:00">12:00</option>
-    </select>
-    <span class="separator">to</span>
-    <label for="end-time" class="sr-only">End time</label>
-    <select id="end-time">
-      <option value="12:00">12:00</option>
-      <option value="13:00">13:00</option>
-      <option value="14:00">14:00</option>
-      <option value="15:00">15:00</option>
-      <option value="16:00">16:00</option>
-      <option value="17:00">17:00</option>
-      <option value="18:00">18:00</option>
-      <option value="19:00">19:00</option>
-      <option value="20:00">20:00</option>
-      <option value="21:00">21:00</option>
-      <option value="22:00">22:00</option>
-      <option value="23:00">23:00</option>
-      <option value="00:00">00:00</option>
-    </select>
-    <label for="interval" class="sr-only">Interval</label>
-    <select id="interval">
-      <option value="15">15 min</option>
-      <option value="30">30 min</option>
-      <option value="60">60 min</option>
-    </select>
-  </div>
+    <aside class="sidebar">
+      <div class="brand">netgig<span class="dot">.</span></div>
 
-  <div id="schedule" class="schedule"
-       data-start="{{DATA_START}}"
-       data-end="{{DATA_END}}"
-       data-interval="{{DATA_INTERVAL}}"
-       data-variant="standard">
+      <nav class="sidebar-nav" aria-label="Primary">
+        <a href="/hourly-planner/" class="is-active">Hourly Planner</a>
+        <a href="#templates">Templates</a>
+        <span class="is-disabled">Blog</span>
+        <a href="#about">About</a>
+      </nav>
 
-{{STATIC_GRID}}
-  </div>
+      <div class="sidebar-promo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M10 21v-5"/><path d="M14 21v-5"/><path d="M7 12c0-3 2-5 5-5s5 2 5 5"/><path d="M12 7V3"/><path d="M8 16h8l-1-4H9l-1 4z"/></svg>
+        <p class="kicker">Go distraction-free</p>
+        <p>Print your plan and focus on what matters.</p>
+        <a href="#output">Learn more &rarr;</a>
+      </div>
+    </aside>
 
-  <section class="related-tools">
-    <h2>Related Tools</h2>
-    <ul>
+    <header class="mobile-header">
+      <div class="brand">netgig<span class="dot">.</span></div>
+      <div class="mobile-header-actions">
+        <button type="button" class="btn btn-lime tap-target" id="mobile-print-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1"/><rect x="7" y="14" width="10" height="7"/></svg>
+          Print
+        </button>
+        <button type="button" class="mobile-menu-btn tap-target" id="mobile-menu-btn" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+        </button>
+      </div>
+    </header>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Primary mobile">
+      <a href="/hourly-planner/">Hourly Planner</a>
+      <a href="#templates">Templates</a>
+      <span class="is-disabled">Blog</span>
+      <a href="#about">About</a>
+    </nav>
+
+    <main class="main">
+
+      <div class="utility-bar">
+        <span class="offline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg>
+          Works offline
+        </span>
+        <button type="button" class="btn-primary btn" id="utility-print-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1"/><rect x="7" y="14" width="10" height="7"/></svg>
+          Print / Download
+        </button>
+      </div>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="hand">Your day.</p>
+          <h1 class="display">{{HERO_LINE1}}<br>{{HERO_LINE2}}</h1>
+          <p class="hero-kicker">{{TOOL_LABEL}}</p>
+          <p class="lede">{{DESCRIPTION}}</p>
+          <ul class="hero-benefits">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>100% Free</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11V8a6 6 0 0 1 12 0v3"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>No Sign Up</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1"/><rect x="7" y="14" width="10" height="7"/></svg>Print to A4 / Letter</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg>Works Offline</li>
+          </ul>
+        </div>
+        <div class="hero-art">
+          <img src="/assets/hero-desk.webp" width="1536" height="1024" alt="Notebook, pen, plant and coffee on a desk" loading="eager">
+        </div>
+      </section>
+
+      <section class="planner-tool" id="planner" data-start="{{DATA_START}}" data-end="{{DATA_END}}" data-interval="{{DATA_INTERVAL}}">
+
+        <div class="tool-header">
+          <div class="date-nav">
+            <button type="button" id="date-prev" class="tap-target" aria-label="Previous day">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span class="date-label" id="date-label"></span>
+            <button type="button" id="date-calendar-btn" class="tap-target" aria-label="Pick a date">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </button>
+            <input type="date" id="date-input" class="sr-only" aria-label="Date">
+            <button type="button" id="date-next" class="tap-target" aria-label="Next day">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+          <div class="tool-actions">
+            <button type="button" class="btn" id="tool-clear-btn">Clear</button>
+            <button type="button" class="btn" id="tool-templates-btn">Templates</button>
+            <button type="button" class="btn btn-teal" id="tool-save-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="tool-grid">
+
+          <aside class="control-panel">
+
+            <div class="control-step">
+              <p class="step-label">1. Set your day</p>
+              <p class="small-ui">Use the date controls above to move between days.</p>
+            </div>
+
+            <div class="control-step">
+              <p class="step-label">2. Time range</p>
+              <div class="time-range-fields">
+                <div class="field">
+                  <label for="start-select">Start</label>
+                  <select id="start-select"></select>
+                </div>
+                <div class="field">
+                  <label for="end-select">End</label>
+                  <select id="end-select"></select>
+                </div>
+              </div>
+              <div class="field field-tight">
+                <label for="interval-select">Grid</label>
+                <select id="interval-select"></select>
+              </div>
+              <div class="toggle-row">
+                <button type="button" class="switch" id="show24-toggle" role="switch" aria-checked="false" aria-label="Show 24 hours"></button>
+                Show 24 hours
+              </div>
+            </div>
+
+            <div class="control-step">
+              <p class="step-label">3. Add your tasks</p>
+              <div class="task-input-row">
+                <input type="text" id="task-input" placeholder="e.g. Morning workout" aria-label="Task title">
+                <button type="button" class="btn btn-teal" id="add-task-btn">+ Add Task</button>
+              </div>
+              <p class="hint-label">Quick add</p>
+              <div class="quick-add">
+                <button type="button" class="chip" data-category="workout">Workout</button>
+                <button type="button" class="chip" data-category="work">Work</button>
+                <button type="button" class="chip" data-category="study">Study</button>
+                <button type="button" class="chip" data-category="meeting">Meeting</button>
+                <button type="button" class="chip" data-category="break">Break</button>
+                <button type="button" class="chip" data-category="personal">Personal</button>
+              </div>
+            </div>
+
+            <div class="control-step">
+              <p class="step-label">View</p>
+              <div class="view-toggle">
+                <button type="button" id="view-timeline-btn" aria-pressed="true">Timeline View</button>
+                <button type="button" id="view-compact-btn" aria-pressed="false">Compact View</button>
+              </div>
+            </div>
+
+          </aside>
+
+          <div class="timeline-wrap">
+            <div class="print-header">
+              <h1 class="display">Hourly Planner</h1>
+              <p class="print-date" id="print-date"></p>
+            </div>
+            <div class="print-columns"><span>Time</span><span>Schedule</span></div>
+
+            <div class="timeline" id="timeline">
+              <div class="timeline-gutter" id="timeline-gutter">
+{{STATIC_GUTTER}}
+              </div>
+              <div class="timeline-track" id="timeline-track">
+{{STATIC_TRACK}}
+              </div>
+            </div>
+          </div>
+
+          <aside class="insight-panel">
+            <div class="insight-card">
+              <h3>Day progress</h3>
+              <div class="progress-ring" id="progress-ring">
+                <span class="pct" id="progress-pct">0%</span>
+              </div>
+              <p class="progress-fraction" id="progress-fraction">0h 0m / 0h</p>
+            </div>
+
+            <div class="insight-card">
+              <h3>Task stats</h3>
+              <ul class="task-stats">
+                <li><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Completed</span><span class="count" id="stat-completed">0</span></li>
+                <li><span class="label"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>In Progress</span><span class="count" id="stat-inprogress">0</span></li>
+                <li><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>Pending</span><span class="count" id="stat-pending">0</span></li>
+              </ul>
+            </div>
+
+            <div class="insight-card focus-card">
+              <h3>Focus mode</h3>
+              <p>Hide distractions and focus on the now.</p>
+              <button type="button" class="btn btn-lime" id="focus-start-btn">Start Focus</button>
+            </div>
+
+            <div class="insight-card">
+              <div class="drag-helper">
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="7" cy="6" r="1.4"/><circle cx="7" cy="12" r="1.4"/><circle cx="7" cy="18" r="1.4"/><circle cx="14" cy="6" r="1.4"/><circle cx="14" cy="12" r="1.4"/><circle cx="14" cy="18" r="1.4"/></svg>
+                <span>Drag tasks to reschedule or change the duration.</span>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </section>
+
+      <section class="templates" id="templates">
+        <h2 class="display">Start faster with templates</h2>
+        <div class="template-grid">
+          <button type="button" class="template-card" data-template="workday">
+            <h3>Workday Schedule</h3>
+            <p>9AM to 5PM</p>
+            <div class="mini-preview"><div class="bar w2"></div><div class="bar w1"></div><div class="bar w3"></div><div class="bar w4"></div></div>
+          </button>
+          <button type="button" class="template-card" data-template="student">
+            <h3>Student Schedule</h3>
+            <p>7AM to 9PM</p>
+            <div class="mini-preview"><div class="bar w1"></div><div class="bar w4"></div><div class="bar w2"></div><div class="bar w3"></div></div>
+          </button>
+          <button type="button" class="template-card" data-template="freelancer">
+            <h3>Freelancer Plan</h3>
+            <p>8AM to 8PM</p>
+            <div class="mini-preview"><div class="bar w2"></div><div class="bar w3"></div><div class="bar w1"></div><div class="bar w4"></div></div>
+          </button>
+          <button type="button" class="template-card" data-template="24hour">
+            <h3>24 Hour Schedule</h3>
+            <p>12AM to 12AM</p>
+            <div class="mini-preview"><div class="bar w4"></div><div class="bar w1"></div><div class="bar w2"></div><div class="bar w1"></div></div>
+          </button>
+          <button type="button" class="template-card" data-template="shift">
+            <h3>Shift Schedule</h3>
+            <p>6AM to 6PM</p>
+            <div class="mini-preview"><div class="bar w1"></div><div class="bar w4"></div><div class="bar w1"></div><div class="bar w3"></div></div>
+          </button>
+        </div>
+      </section>
+
+{{ARTICLE_CONTENT}}
+
+      <section class="output-cta" id="output">
+        <div class="output-cta-inner">
+          <div>
+            <h2><span class="display">Plan once.</span><span class="hand">Stay in control.</span></h2>
+            <p class="lede">Create your ideal day, every day.</p>
+            <button type="button" class="btn btn-lime" id="cta-start-btn">Start Planning Now &rarr;</button>
+            <p class="output-note">Your plan.<br>Your paper.<br>Your success.</p>
+          </div>
+          <div class="output-cards">
+            <div class="output-card">
+              <h3>One-Click Print</h3>
+              <p>Clean layout optimized for A4 &amp; Letter.</p>
+              <button type="button" class="btn btn-ghost btn-on-navy" id="cta-print-btn">Print</button>
+            </div>
+            <div class="output-card">
+              <h3>Download PDF</h3>
+              <p>Save your plan as PDF.</p>
+              <button type="button" class="btn btn-ghost btn-on-navy" id="cta-pdf-btn">Save as PDF</button>
+            </div>
+            <div class="output-card">
+              <h3>Download Image</h3>
+              <p>Save as PNG for sharing or backup.</p>
+              <button type="button" class="btn btn-ghost btn-on-navy" id="cta-png-btn">Save as PNG</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section" id="about">
+        <h2>About netgig.online</h2>
+        <p>netgig.online builds small, focused browser tools that work without accounts, downloads or ads. The Hourly Planner is a free way to sketch out a day and print it — nothing else installed, nothing tracked.</p>
+      </section>
+
+      <section class="related-tools">
+        <h2 class="small-ui">Related Tools</h2>
+        <ul>
 {{RELATED_LINKS}}
-    </ul>
-    <p><a href="../../">← All tools</a></p>
-  </section>
+        </ul>
+        <p class="all-tools-link"><a href="/">&larr; All tools</a></p>
+      </section>
 
-  <footer class="site-footer">
-    <p>netgig.online</p>
-  </footer>
+      <footer class="site-footer">
+        <p>&copy; 2026 netgig.online</p>
+        <nav>
+          <a href="#about">Privacy Policy</a>
+          <a href="#about">Terms</a>
+          <a href="#about">Contact</a>
+        </nav>
+      </footer>
 
-  <script src="../../src/planner.js"></script>
+    </main>
+  </div>
+
+  <div class="focus-overlay" id="focus-overlay" hidden>
+    <button type="button" class="btn focus-exit" id="focus-exit-btn">Exit (Esc)</button>
+    <div class="focus-current">
+      <p class="kicker" id="focus-kicker">UP NEXT</p>
+      <h2 id="focus-title">Task</h2>
+      <p class="time" id="focus-time"></p>
+    </div>
+    <p class="focus-next" id="focus-next"></p>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/src/planner.js"></script>
 </body>
 </html>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#071B2B"/>
+  <text x="2.5" y="22.6"
+        font-family="DM Sans, Arial, sans-serif"
+        font-size="18"
+        font-weight="700"
+        letter-spacing="-0.7"
+        fill="#F7F3EA">ng</text>
+  <circle cx="25.2" cy="21.3" r="2.3" fill="#E8F338"/>
+</svg>

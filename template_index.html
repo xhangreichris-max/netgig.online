@@ -8,10 +8,27 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://netgig.online/">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon-180x180.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="netgig.online — Free Productivity Tools">
+  <meta property="og:description" content="Free browser tools. No accounts. No downloads. Start with the free hourly planner.">
+  <meta property="og:image" content="https://netgig.online/assets/og-image-1200x630.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/webp">
+  <meta property="og:image" content="https://netgig.online/assets/og-image-1200x630.svg">
+  <meta property="og:url" content="https://netgig.online/">
+  <meta property="og:type" content="website">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -21,6 +38,7 @@
       --quiet:  #6B6B66;
       --pen:    #0369A1;
       --font-text: 'IBM Plex Sans', system-ui, sans-serif;
+      --font-data: 'IBM Plex Mono', ui-monospace, monospace;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,50 +54,64 @@
       padding: 2rem 1rem;
     }
 
-    h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+    .site-title {
+      font-family: var(--font-data);
+      color: var(--ink);
+      font-size: 1.375rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
       margin-bottom: 0.5rem;
     }
 
     .tagline {
+      font-family: var(--font-text);
       color: var(--quiet);
+      font-size: 1rem;
       margin-bottom: 2rem;
     }
 
-    .tools-list {
-      list-style: none;
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
     }
 
-    .tools-list li {
-      border-bottom: 1px solid var(--rule);
-    }
-
-    .tools-list li:last-child {
-      border-bottom: none;
-    }
-
-    .tools-list a {
+    .tool-card {
       display: block;
-      padding: 1rem 0;
-      color: var(--ink);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 1.5rem;
+      color: inherit;
       text-decoration: none;
+      transition: border-color 150ms ease;
     }
 
-    .tools-list a:hover {
-      color: var(--pen);
+    .tool-card:hover,
+    .tool-card:focus-visible {
+      border-color: var(--pen);
     }
 
-    .tools-list .tool-name {
-      font-weight: 600;
+    .tool-card .tool-name {
+      font-family: var(--font-text);
+      color: var(--ink);
       font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
     }
 
-    .tools-list .tool-desc {
+    .tool-card .tool-desc {
+      font-family: var(--font-text);
       color: var(--quiet);
       font-size: 0.875rem;
-      margin-top: 0.25rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .tool-card .tool-link {
+      display: inline-block;
+      font-family: var(--font-data);
+      color: var(--pen);
+      font-size: 0.875rem;
     }
 
     footer {
@@ -88,19 +120,27 @@
       color: var(--quiet);
       font-size: 0.8125rem;
     }
+
+    @media (max-width: 640px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <h1>netgig.online</h1>
-  <p class="tagline">Free productivity tools. No accounts. No downloads.</p>
+  <header>
+    <p class="site-title">netgig.online</p>
+    <p class="tagline">Free tools. No account. No download.</p>
+  </header>
 
-  <ul class="tools-list">
+  <div class="tools-grid">
 {{TOOL_LINKS}}
-  </ul>
+  </div>
 
   <footer>
-    <p>netgig.online</p>
+    <p>netgig.online &middot; Free productivity tools</p>
   </footer>
 
 </body>

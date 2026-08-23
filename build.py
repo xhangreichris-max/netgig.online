@@ -3,22 +3,40 @@
 build.py – Page generator for netgig.online
 
 Reads pages-config.json and template.html, generates:
-  - docs/[slug]/index.html for each page (with static grid rows)
+  - docs/[slug]/index.html for each page (with static hourly timeline rows)
   - docs/index.html from template_index.html
   - docs/sitemap.xml
   - docs/robots.txt
   - docs/llms.txt
+  - docs/src/    (copied from src/,    so style.css and planner.js are servable)
+  - docs/assets/ (copied from assets/, if present, so hero/template images are servable)
 """
 
 import json
 import os
+import re
+import shutil
 import textwrap
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DOCS = os.path.join(ROOT, "docs")
+SRC = os.path.join(ROOT, "src")
+ASSETS = os.path.join(ROOT, "assets")
 CONFIG_PATH = os.path.join(ROOT, "pages-config.json")
 TEMPLATE_PATH = os.path.join(ROOT, "template.html")
 INDEX_TEMPLATE_PATH = os.path.join(ROOT, "template_index.html")
+ARTICLE_PATH = os.path.join(ROOT, "article-hourly-planner.html")
+
+
+def copy_dir(src, dest, label):
+    """Copy a source directory into docs/, replacing any previous copy."""
+    if not os.path.isdir(src):
+        print(f"  [skip] {label} (no {os.path.relpath(src, ROOT)}\\ folder found)")
+        return
+    if os.path.isdir(dest):
+        shutil.rmtree(dest)
+    shutil.copytree(src, dest)
+    print(f"  [ok] {label}")
 
 
 def load_config():
@@ -37,48 +55,51 @@ def parse_time(time_str):
     return int(h) * 60 + int(m)
 
 
-def format_time(total_minutes):
-    """Convert total minutes to 'HH:MM'."""
+def format_time_12(total_minutes):
+    """Convert total minutes (on the hour) to a 12-hour label, e.g. '6:00 AM'."""
     h = (total_minutes // 60) % 24
-    m = total_minutes % 60
-    return f"{h:02d}:{m:02d}"
+    period = "PM" if h >= 12 else "AM"
+    h12 = h % 12
+    if h12 == 0:
+        h12 = 12
+    return f"{h12}:00 {period}"
 
 
-def generate_time_slots(start, end, interval):
-    """Return list of time strings from start to end (inclusive) at interval."""
+def generate_hour_marks(start, end):
+    """Return a list of on-the-hour minute marks from start to end inclusive."""
     start_min = parse_time(start)
     end_min = parse_time(end)
-    slots = []
-    t = start_min
+    marks = []
+    t = (start_min // 60) * 60
+    if t < start_min:
+        t += 60
     while t <= end_min:
-        slots.append(format_time(t))
-        t += interval
-    return slots
+        marks.append(t)
+        t += 60
+    return marks
 
 
-def build_static_grid(slots):
-    """Build static HTML grid rows for crawlers to see without JS."""
-    rows = []
-    for i, time in enumerate(slots):
-        hint = ""
-        if i == 0:
-            hint = '\n        <span class="empty-hint">Start typing to add a task</span>'
-        rows.append(
-            f'    <div class="schedule-row">\n'
-            f'      <div class="time-label">{time}</div>\n'
-            f'      <div class="task-cell">{hint}\n'
-            f'      </div>\n'
-            f'    </div>'
-        )
-    return "\n\n".join(rows)
+def build_static_gutter(hour_marks):
+    """Static hour labels so crawlers see timeline content without JS."""
+    rows = [
+        f'                <div class="gutter-row">{format_time_12(m)}</div>'
+        for m in hour_marks
+    ]
+    return "\n".join(rows)
 
 
-def build_jsonld(page, base_url):
+def build_static_track(hour_marks):
+    """Static hour grid lines matching the gutter, no-JS fallback."""
+    lines = ['                <div class="track-hour-line"></div>' for _ in hour_marks]
+    return "\n".join(lines)
+
+
+def build_webapp_jsonld(page, base_url):
     """Build JSON-LD WebApplication schema."""
-    data = {
+    return {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": page["title"],
+        "name": page["tool_label"],
         "url": f"{base_url}/{page['slug']}/",
         "applicationCategory": "ProductivityApplication",
         "operatingSystem": "Any",
@@ -88,68 +109,63 @@ def build_jsonld(page, base_url):
             "priceCurrency": "USD"
         }
     }
+
+
+def build_faq_jsonld(article_path, count=3):
+    """Build JSON-LD FAQPage schema from the first `count` H3/P pairs
+    in the article file (the article's H3s are exclusively FAQ questions)."""
+    with open(article_path, encoding="utf-8") as f:
+        content = f.read()
+    pairs = re.findall(r"<h3>(.*?)</h3>\s*<p>(.*?)</p>", content, re.DOTALL)
+
+    def strip_tags(s):
+        return re.sub(r"<[^>]+>", "", s).strip()
+
+    entities = [
+        {
+            "@type": "Question",
+            "name": strip_tags(question),
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": strip_tags(answer)
+            }
+        }
+        for question, answer in pairs[:count]
+    ]
+    return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": entities
+    }
+
+
+def build_jsonld(page, base_url):
+    """Build the page's JSON-LD block: WebApplication alone, or a
+    [WebApplication, FAQPage] array on pages that show the FAQ article."""
+    schemas = [build_webapp_jsonld(page, base_url)]
+    if page.get("show_article") and os.path.isfile(ARTICLE_PATH):
+        schemas.append(build_faq_jsonld(ARTICLE_PATH))
+    data = schemas[0] if len(schemas) == 1 else schemas
     return json.dumps(data, indent=4)
 
 
 def build_related_links(current_slug, all_pages):
-    """Build HTML list items linking to all other pages + home."""
+    """Build HTML list items linking to all other tool pages."""
     links = []
     for p in all_pages:
         if p["slug"] != current_slug:
             links.append(
-                f'      <li><a href="../../{p["slug"]}/">{p["h1"]}</a></li>'
+                f'          <li><a href="/{p["slug"]}/">{p["tool_label"]}</a></li>'
             )
     return "\n".join(links)
-
-
-def build_select_defaults(template, page):
-    """Set selected attributes on the start, end, interval dropdowns."""
-    html = template
-
-    # Start time: mark the matching option as selected
-    start_val = page["start"]
-    # Remove any existing selected on start-time options
-    # Then add selected to the right one
-    # We'll do this by processing the select blocks
-
-    # For start-time select
-    old_start = f'<option value="{start_val}">{start_val}</option>'
-    new_start = f'<option value="{start_val}" selected>{start_val}</option>'
-    # Only replace within the start-time context — but since values are unique
-    # across the whole template for start options, this is safe
-    html = html.replace(old_start, new_start, 1)
-
-    # For end-time select
-    end_val = page["end"]
-    old_end = f'<option value="{end_val}">{end_val}</option>'
-    new_end = f'<option value="{end_val}" selected>{end_val}</option>'
-    # The end options come after start options; replace the LAST occurrence
-    # Actually, if the value exists in both selects we need to be careful.
-    # Since start select goes up to 12:00 and end select starts at 12:00,
-    # some values overlap. Let's find the right one.
-    # Strategy: split on the end-time select id and replace in the second part.
-    parts = html.split('id="end-time"', 1)
-    if len(parts) == 2:
-        parts[1] = parts[1].replace(old_end, new_end, 1)
-        html = 'id="end-time"'.join(parts)
-
-    # For interval select
-    interval_val = str(page["interval"])
-    old_int = f'<option value="{interval_val}">{interval_val} min</option>'
-    new_int = f'<option value="{interval_val}" selected>{interval_val} min</option>'
-    parts = html.split('id="interval"', 1)
-    if len(parts) == 2:
-        parts[1] = parts[1].replace(old_int, new_int, 1)
-        html = 'id="interval"'.join(parts)
-
-    return html
 
 
 def generate_page(page, template, all_pages, base_url):
     """Generate a single page HTML from template and page config."""
     canonical = f"{base_url}/{page['slug']}/"
-    slots = generate_time_slots(page["start"], page["end"], page["interval"])
-    static_grid = build_static_grid(slots)
+    hour_marks = generate_hour_marks(page["start"], page["end"])
+    static_gutter = build_static_gutter(hour_marks)
+    static_track = build_static_track(hour_marks)
     jsonld = build_jsonld(page, base_url)
     related = build_related_links(page["slug"], all_pages)
 
@@ -157,16 +173,22 @@ def generate_page(page, template, all_pages, base_url):
     html = html.replace("{{TITLE}}", page["title"])
     html = html.replace("{{DESCRIPTION}}", page["description"])
     html = html.replace("{{CANONICAL_URL}}", canonical)
-    html = html.replace("{{H1}}", page["h1"])
+    html = html.replace("{{TOOL_LABEL}}", page["tool_label"])
+    html = html.replace("{{HERO_LINE1}}", page["hero_line1"])
+    html = html.replace("{{HERO_LINE2}}", page["hero_line2"])
     html = html.replace("{{DATA_START}}", page["start"])
     html = html.replace("{{DATA_END}}", page["end"])
     html = html.replace("{{DATA_INTERVAL}}", str(page["interval"]))
-    html = html.replace("{{STATIC_GRID}}", static_grid)
+    html = html.replace("{{STATIC_GUTTER}}", static_gutter)
+    html = html.replace("{{STATIC_TRACK}}", static_track)
     html = html.replace("{{JSONLD}}", jsonld)
     html = html.replace("{{RELATED_LINKS}}", related)
 
-    # Set correct selected attributes on dropdowns
-    html = build_select_defaults(html, page)
+    if page.get("show_article"):
+        article_html = open(ARTICLE_PATH, encoding="utf-8").read()
+    else:
+        article_html = ""
+    html = html.replace("{{ARTICLE_CONTENT}}", article_html)
 
     return html
 
@@ -176,24 +198,35 @@ def generate_index(index_template, all_pages):
     links = []
     for p in all_pages:
         links.append(
-            f'    <li>\n'
-            f'      <a href="{p["slug"]}/">\n'
-            f'        <div class="tool-name">{p["h1"]}</div>\n'
-            f'        <div class="tool-desc">{p["description"]}</div>\n'
-            f'      </a>\n'
-            f'    </li>'
+            f'    <a class="tool-card" href="{p["slug"]}/">\n'
+            f'      <div class="tool-name">{p["tool_label"]}</div>\n'
+            f'      <p class="tool-desc">{p["description"]}</p>\n'
+            f'      <span class="tool-link">Open tool &rarr;</span>\n'
+            f'    </a>'
         )
     tool_links = "\n".join(links)
     return index_template.replace("{{TOOL_LINKS}}", tool_links)
 
 
+SITEMAP_LASTMOD = "2026-08-23"
+
+
 def generate_sitemap(pages, base_url):
-    """Generate sitemap.xml listing all pages with trailing slash."""
-    urls = []
+    """Generate sitemap.xml: homepage + all tool pages, trailing slash,
+    lastmod/changefreq/priority on every entry."""
+    entries = [(f"{base_url}/", "0.9")]
     for p in pages:
+        priority = "1.0" if p["slug"] == "hourly-planner" else "0.8"
+        entries.append((f"{base_url}/{p['slug']}/", priority))
+
+    urls = []
+    for loc, priority in entries:
         urls.append(
             f"  <url>\n"
-            f"    <loc>{base_url}/{p['slug']}/</loc>\n"
+            f"    <loc>{loc}</loc>\n"
+            f"    <lastmod>{SITEMAP_LASTMOD}</lastmod>\n"
+            f"    <changefreq>weekly</changefreq>\n"
+            f"    <priority>{priority}</priority>\n"
             f"  </url>"
         )
     return (
@@ -243,6 +276,10 @@ def main():
     index_template = load_template(INDEX_TEMPLATE_PATH)
 
     print("Building pages...")
+
+    # Copy static assets (CSS, JS, images)
+    copy_dir(SRC, os.path.join(DOCS, "src"), "docs\\src (from src\\)")
+    copy_dir(ASSETS, os.path.join(DOCS, "assets"), "docs\\assets (from assets\\)")
 
     # Generate tool pages
     for page in pages:
