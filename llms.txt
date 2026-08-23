@@ -1,0 +1,8 @@
+# netgig.online
+Free productivity tools. No accounts. No downloads.
+
+## Tools
+- /hourly-planner/ Free hourly planner generator
+- /hourly-schedule-template/ Hourly schedule template
+- /daily-hourly-schedule/ Daily hourly schedule maker
+- /hour-by-hour-schedule/ Hour by hour schedule planner
