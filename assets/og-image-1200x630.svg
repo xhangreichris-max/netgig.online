@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#F7F3EA"/>
+  <rect width="520" height="630" fill="#071B2B"/>
+  <text x="58" y="74" font-family="DM Sans, Arial, sans-serif" font-size="38" font-weight="700" fill="#F7F3EA">netgig</text>
+  <circle cx="208" cy="62" r="5.2" fill="#E8F338"/>
+  <text x="58" y="172" font-family="DM Sans, Arial, sans-serif" font-size="58" font-weight="800" fill="#F7F3EA">
+    <tspan x="58" dy="0">Free Hourly</tspan>
+    <tspan x="58" dy="72">Planner</tspan>
+  </text>
+  <rect x="60" y="278" width="104" height="7" rx="3.5" fill="#E8F338"/>
+  <text x="60" y="342" font-family="DM Sans, Arial, sans-serif" font-size="26" font-weight="500" fill="#A9B4BE">
+    <tspan x="60" dy="0">No login. No ads.</tspan>
+    <tspan x="60" dy="38">Just plan and print.</tspan>
+  </text>
+  <text x="580" y="78" font-family="DM Sans, Arial, sans-serif" font-size="25" font-weight="800" fill="#071B2B">TODAY'S PLAN</text>
+  <text x="1048" y="78" font-family="DM Sans, Arial, sans-serif" font-size="20" font-weight="500" fill="#071B2B">DATE: __ / __ / ____</text>
+  <rect x="562" y="115" width="580" height="410" rx="10" fill="#FFFFFF" stroke="#071B2B" stroke-opacity=".25" stroke-width="2"/>
+  <rect x="562" y="115" width="580" height="64" rx="10" fill="#F7F3EA"/>
+  <line x1="562" y1="179" x2="1142" y2="179" stroke="#071B2B" stroke-opacity=".25" stroke-width="2"/>
+  <line x1="735" y1="115" x2="735" y2="525" stroke="#071B2B" stroke-opacity=".25" stroke-width="2"/>
+  <text x="597" y="156" font-family="DM Sans, Arial, sans-serif" font-size="18" font-weight="800" fill="#071B2B">TIME</text>
+  <text x="795" y="156" font-family="DM Sans, Arial, sans-serif" font-size="18" font-weight="800" fill="#071B2B">PLAN</text>
+  <line x1="562" y1="294" x2="1142" y2="294" stroke="#071B2B" stroke-opacity=".18" stroke-width="2"/>
+  <line x1="562" y1="409" x2="1142" y2="409" stroke="#071B2B" stroke-opacity=".18" stroke-width="2"/>
+
+  <text x="598" y="227" font-family="DM Sans, Arial, sans-serif" font-size="25" font-weight="800" fill="#071B2B">9:00</text>
+  <text x="598" y="253" font-family="DM Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#071B2B">AM</text>
+  <rect x="765" y="195" width="346" height="76" rx="8" fill="#18A88A"/>
+  <text x="793" y="226" font-family="DM Sans, Arial, sans-serif" font-size="22" font-weight="800" fill="#071B2B">Deep Work</text>
+  <line x1="793" y1="245" x2="1058" y2="245" stroke="#071B2B" stroke-opacity=".4" stroke-width="2"/>
+
+  <text x="598" y="342" font-family="DM Sans, Arial, sans-serif" font-size="25" font-weight="800" fill="#071B2B">10:00</text>
+  <text x="598" y="368" font-family="DM Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#071B2B">AM</text>
+  <rect x="765" y="310" width="346" height="76" rx="8" fill="#DDD6FF"/>
+  <text x="793" y="341" font-family="DM Sans, Arial, sans-serif" font-size="22" font-weight="800" fill="#071B2B">Team Meeting</text>
+  <line x1="793" y1="360" x2="1058" y2="360" stroke="#071B2B" stroke-opacity=".4" stroke-width="2"/>
+
+  <text x="598" y="457" font-family="DM Sans, Arial, sans-serif" font-size="25" font-weight="800" fill="#071B2B">11:00</text>
+  <text x="598" y="483" font-family="DM Sans, Arial, sans-serif" font-size="18" font-weight="700" fill="#071B2B">AM</text>
+  <rect x="765" y="425" width="346" height="76" rx="8" fill="#FFD5BE"/>
+  <text x="793" y="456" font-family="DM Sans, Arial, sans-serif" font-size="22" font-weight="800" fill="#071B2B">Project Planning</text>
+  <line x1="793" y1="475" x2="1058" y2="475" stroke="#071B2B" stroke-opacity=".4" stroke-width="2"/>
+  <text x="58" y="582" font-family="DM Sans, Arial, sans-serif" font-size="16" font-weight="600" fill="#A9B4BE">netgig.online/hourly-planner/</text>
+</svg>

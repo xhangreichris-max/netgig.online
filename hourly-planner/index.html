@@ -3,234 +3,507 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Free Hourly Planner - Build and Print a Daily Schedule</title>
-  <meta name="description" content="Make an hour-by-hour schedule in your browser and print it. No account, no download, no setup.">
+  <title>Free Hourly Planner - Create an Hour-by-Hour Schedule</title>
+  <meta name="description" content="Free hourly planner generator. No login. No ads. Just plan and print.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://netgig.online/hourly-planner/">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon-180x180.png">
+
   <!-- Open Graph -->
-  <meta property="og:title" content="Free Hourly Planner - Build and Print a Daily Schedule">
-  <meta property="og:description" content="Make an hour-by-hour schedule in your browser and print it. No account, no download, no setup.">
+  <meta property="og:title" content="Free Hourly Planner - Create an Hour-by-Hour Schedule">
+  <meta property="og:description" content="Free hourly planner generator. No login. No ads. Just plan and print.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://netgig.online/hourly-planner/">
+  <meta property="og:image" content="https://netgig.online/assets/og-image-1200x630.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/webp">
+  <meta property="og:image" content="https://netgig.online/assets/og-image-1200x630.svg">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="../../src/style.css">
+  <link rel="stylesheet" href="/src/style.css">
 
   <!-- JSON-LD -->
   <script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Free Hourly Planner - Build and Print a Daily Schedule",
-    "url": "https://netgig.online/hourly-planner/",
-    "applicationCategory": "ProductivityApplication",
-    "operatingSystem": "Any",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+[
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Hourly Planner",
+        "url": "https://netgig.online/hourly-planner/",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is the best way to start using an hourly planner?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Plan a single day, tomorrow, in about ten minutes tonight. Do not try to build a system for your whole life on day one. Write down your fixed items first, then pick three real tasks you want to do tomorrow and assign each one a specific hour. Leave the rest of the day loose. See what happens. Adjust the next night. After a week of this, you will have a version that fits your actual life better than any template someone else designed, and the habit will feel less like homework."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How many tasks should I put in each hour?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "One is usually right. Sometimes two if they are both small and related, like \"reply to Anna, then draft the meeting agenda.\" Fitting three or more tasks into a single hour usually means either the tasks are tiny (in which case batch them into a larger admin block) or you are being unrealistic about how long things take. Real work has friction, context switching costs, and thinking time built in. If you consistently blow past your one hour blocks, your tasks are probably bigger than you think and the answer is fewer tasks per hour."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What should I do if I fall behind my hourly schedule?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Stop for two minutes. Look at what is left in the day and decide what actually needs to happen versus what can slide to tomorrow. Move the important remaining block into the next open slot and cut something that can wait. Falling behind is not a signal to abandon the planner, it is the situation the planner was built for. The people who get value out of hourly planning are the ones who rebuild the day at lunch when the morning went sideways, not the ones who follow a plan perfectly (nobody actually does)."
+                }
+            }
+        ]
     }
-}
+]
   </script>
 </head>
 <body>
 
-  <header class="site-header">
-    <h1>Hourly Planner</h1>
-    <span class="header-date"></span>
-  </header>
+  <div class="app-shell">
 
-  <div class="controls">
-    <label for="start-time" class="sr-only">Start time</label>
-    <select id="start-time">
-      <option value="05:00">05:00</option>
-      <option value="06:00">06:00</option>
-      <option value="07:00">07:00</option>
-      <option value="08:00" selected>08:00</option>
-      <option value="09:00">09:00</option>
-      <option value="10:00">10:00</option>
-      <option value="11:00">11:00</option>
-      <option value="12:00">12:00</option>
-    </select>
-    <span class="separator">to</span>
-    <label for="end-time" class="sr-only">End time</label>
-    <select id="end-time">
-      <option value="12:00">12:00</option>
-      <option value="13:00">13:00</option>
-      <option value="14:00">14:00</option>
-      <option value="15:00">15:00</option>
-      <option value="16:00">16:00</option>
-      <option value="17:00">17:00</option>
-      <option value="18:00" selected>18:00</option>
-      <option value="19:00">19:00</option>
-      <option value="20:00">20:00</option>
-      <option value="21:00">21:00</option>
-      <option value="22:00">22:00</option>
-      <option value="23:00">23:00</option>
-      <option value="00:00">00:00</option>
-    </select>
-    <label for="interval" class="sr-only">Interval</label>
-    <select id="interval">
-      <option value="15">15 min</option>
-      <option value="30" selected>30 min</option>
-      <option value="60">60 min</option>
-    </select>
+    <aside class="sidebar">
+      <div class="brand">netgig<span class="dot">.</span></div>
+
+      <nav class="sidebar-nav" aria-label="Primary">
+        <a href="/hourly-planner/" class="is-active">Hourly Planner</a>
+        <a href="#templates">Templates</a>
+        <span class="is-disabled">Blog</span>
+        <a href="#about">About</a>
+      </nav>
+
+      <div class="sidebar-promo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M10 21v-5"/><path d="M14 21v-5"/><path d="M7 12c0-3 2-5 5-5s5 2 5 5"/><path d="M12 7V3"/><path d="M8 16h8l-1-4H9l-1 4z"/></svg>
+        <p class="kicker">Go distraction-free</p>
+        <p>Print your plan and focus on what matters.</p>
+        <a href="#output">Learn more &rarr;</a>
+      </div>
+    </aside>
+
+    <header class="mobile-header">
+      <div class="brand">netgig<span class="dot">.</span></div>
+      <div class="mobile-header-actions">
+        <button type="button" class="btn btn-lime tap-target" id="mobile-print-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1"/><rect x="7" y="14" width="10" height="7"/></svg>
+          Print
+        </button>
+        <button type="button" class="mobile-menu-btn tap-target" id="mobile-menu-btn" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+        </button>
+      </div>
+    </header>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Primary mobile">
+      <a href="/hourly-planner/">Hourly Planner</a>
+      <a href="#templates">Templates</a>
+      <span class="is-disabled">Blog</span>
+      <a href="#about">About</a>
+    </nav>
+
+    <main class="main">
+
+      <div class="utility-bar">
+        <span class="offline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg>
+          Works offline
+        </span>
+        <button type="button" class="btn-primary btn" id="utility-print-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1"/><rect x="7" y="14" width="10" height="7"/></svg>
+          Print / Download
+        </button>
+      </div>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="hand">Your day.</p>
+          <h1 class="display">PLANNED<br>YOUR WAY.</h1>
+          <p class="hero-kicker">Hourly Planner</p>
+          <p class="lede">Free hourly planner generator. No login. No ads. Just plan and print.</p>
+          <ul class="hero-benefits">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>100% Free</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11V8a6 6 0 0 1 12 0v3"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>No Sign Up</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1"/><rect x="7" y="14" width="10" height="7"/></svg>Print to A4 / Letter</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg>Works Offline</li>
+          </ul>
+        </div>
+        <div class="hero-art">
+          <img src="/assets/hero-desk.webp" width="1536" height="1024" alt="Notebook, pen, plant and coffee on a desk" loading="eager">
+        </div>
+      </section>
+
+      <section class="planner-tool" id="planner" data-start="08:00" data-end="18:00" data-interval="30">
+
+        <div class="tool-header">
+          <div class="date-nav">
+            <button type="button" id="date-prev" class="tap-target" aria-label="Previous day">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span class="date-label" id="date-label"></span>
+            <button type="button" id="date-calendar-btn" class="tap-target" aria-label="Pick a date">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </button>
+            <input type="date" id="date-input" class="sr-only" aria-label="Date">
+            <button type="button" id="date-next" class="tap-target" aria-label="Next day">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+          <div class="tool-actions">
+            <button type="button" class="btn" id="tool-clear-btn">Clear</button>
+            <button type="button" class="btn" id="tool-templates-btn">Templates</button>
+            <button type="button" class="btn btn-teal" id="tool-save-btn">Save</button>
+          </div>
+        </div>
+
+        <div class="tool-grid">
+
+          <aside class="control-panel">
+
+            <div class="control-step">
+              <p class="step-label">1. Set your day</p>
+              <p class="small-ui">Use the date controls above to move between days.</p>
+            </div>
+
+            <div class="control-step">
+              <p class="step-label">2. Time range</p>
+              <div class="time-range-fields">
+                <div class="field">
+                  <label for="start-select">Start</label>
+                  <select id="start-select"></select>
+                </div>
+                <div class="field">
+                  <label for="end-select">End</label>
+                  <select id="end-select"></select>
+                </div>
+              </div>
+              <div class="field field-tight">
+                <label for="interval-select">Grid</label>
+                <select id="interval-select"></select>
+              </div>
+              <div class="toggle-row">
+                <button type="button" class="switch" id="show24-toggle" role="switch" aria-checked="false" aria-label="Show 24 hours"></button>
+                Show 24 hours
+              </div>
+            </div>
+
+            <div class="control-step">
+              <p class="step-label">3. Add your tasks</p>
+              <div class="task-input-row">
+                <input type="text" id="task-input" placeholder="e.g. Morning workout" aria-label="Task title">
+                <button type="button" class="btn btn-teal" id="add-task-btn">+ Add Task</button>
+              </div>
+              <p class="hint-label">Quick add</p>
+              <div class="quick-add">
+                <button type="button" class="chip" data-category="workout">Workout</button>
+                <button type="button" class="chip" data-category="work">Work</button>
+                <button type="button" class="chip" data-category="study">Study</button>
+                <button type="button" class="chip" data-category="meeting">Meeting</button>
+                <button type="button" class="chip" data-category="break">Break</button>
+                <button type="button" class="chip" data-category="personal">Personal</button>
+              </div>
+            </div>
+
+            <div class="control-step">
+              <p class="step-label">View</p>
+              <div class="view-toggle">
+                <button type="button" id="view-timeline-btn" aria-pressed="true">Timeline View</button>
+                <button type="button" id="view-compact-btn" aria-pressed="false">Compact View</button>
+              </div>
+            </div>
+
+          </aside>
+
+          <div class="timeline-wrap">
+            <div class="print-header">
+              <h1 class="display">Hourly Planner</h1>
+              <p class="print-date" id="print-date"></p>
+            </div>
+            <div class="print-columns"><span>Time</span><span>Schedule</span></div>
+
+            <div class="timeline" id="timeline">
+              <div class="timeline-gutter" id="timeline-gutter">
+                <div class="gutter-row">8:00 AM</div>
+                <div class="gutter-row">9:00 AM</div>
+                <div class="gutter-row">10:00 AM</div>
+                <div class="gutter-row">11:00 AM</div>
+                <div class="gutter-row">12:00 PM</div>
+                <div class="gutter-row">1:00 PM</div>
+                <div class="gutter-row">2:00 PM</div>
+                <div class="gutter-row">3:00 PM</div>
+                <div class="gutter-row">4:00 PM</div>
+                <div class="gutter-row">5:00 PM</div>
+                <div class="gutter-row">6:00 PM</div>
+              </div>
+              <div class="timeline-track" id="timeline-track">
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+                <div class="track-hour-line"></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="insight-panel">
+            <div class="insight-card">
+              <h3>Day progress</h3>
+              <div class="progress-ring" id="progress-ring">
+                <span class="pct" id="progress-pct">0%</span>
+              </div>
+              <p class="progress-fraction" id="progress-fraction">0h 0m / 0h</p>
+            </div>
+
+            <div class="insight-card">
+              <h3>Task stats</h3>
+              <ul class="task-stats">
+                <li><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Completed</span><span class="count" id="stat-completed">0</span></li>
+                <li><span class="label"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8 5v14l11-7z"/></svg>In Progress</span><span class="count" id="stat-inprogress">0</span></li>
+                <li><span class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>Pending</span><span class="count" id="stat-pending">0</span></li>
+              </ul>
+            </div>
+
+            <div class="insight-card focus-card">
+              <h3>Focus mode</h3>
+              <p>Hide distractions and focus on the now.</p>
+              <button type="button" class="btn btn-lime" id="focus-start-btn">Start Focus</button>
+            </div>
+
+            <div class="insight-card">
+              <div class="drag-helper">
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="7" cy="6" r="1.4"/><circle cx="7" cy="12" r="1.4"/><circle cx="7" cy="18" r="1.4"/><circle cx="14" cy="6" r="1.4"/><circle cx="14" cy="12" r="1.4"/><circle cx="14" cy="18" r="1.4"/></svg>
+                <span>Drag tasks to reschedule or change the duration.</span>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+      </section>
+
+      <section class="templates" id="templates">
+        <h2 class="display">Start faster with templates</h2>
+        <div class="template-grid">
+          <button type="button" class="template-card" data-template="workday">
+            <h3>Workday Schedule</h3>
+            <p>9AM to 5PM</p>
+            <div class="mini-preview"><div class="bar w2"></div><div class="bar w1"></div><div class="bar w3"></div><div class="bar w4"></div></div>
+          </button>
+          <button type="button" class="template-card" data-template="student">
+            <h3>Student Schedule</h3>
+            <p>7AM to 9PM</p>
+            <div class="mini-preview"><div class="bar w1"></div><div class="bar w4"></div><div class="bar w2"></div><div class="bar w3"></div></div>
+          </button>
+          <button type="button" class="template-card" data-template="freelancer">
+            <h3>Freelancer Plan</h3>
+            <p>8AM to 8PM</p>
+            <div class="mini-preview"><div class="bar w2"></div><div class="bar w3"></div><div class="bar w1"></div><div class="bar w4"></div></div>
+          </button>
+          <button type="button" class="template-card" data-template="24hour">
+            <h3>24 Hour Schedule</h3>
+            <p>12AM to 12AM</p>
+            <div class="mini-preview"><div class="bar w4"></div><div class="bar w1"></div><div class="bar w2"></div><div class="bar w1"></div></div>
+          </button>
+          <button type="button" class="template-card" data-template="shift">
+            <h3>Shift Schedule</h3>
+            <p>6AM to 6PM</p>
+            <div class="mini-preview"><div class="bar w1"></div><div class="bar w4"></div><div class="bar w1"></div><div class="bar w3"></div></div>
+          </button>
+        </div>
+      </section>
+
+      <article class="page-article" aria-label="Hourly planner guide">
+        <h2>What Is an Hourly Planner and Why Does It Work</h2>
+        <p>An hourly planner is a schedule that breaks your day into one hour slots and asks you to decide, ahead of time, what goes in each slot. Most templates cover roughly 6am to 10pm, though the range you actually plan depends on when your day starts and ends. The tool at the top of this page uses the same idea. You look at your day as a stack of one hour bricks and you assign work to each brick before the day starts running you.</p>
+        <p>That sounds boring on paper. In practice it changes how a day feels. A to-do list gives you eleven things to do and your brain treats those eleven things as a swarm. You do the easiest item, then check email, then pick another easy one, then wonder where three hours went. An hourly schedule takes those same eleven items and pins them to actual times, so at 10am you already know you are writing the client proposal, not choosing which task to start.</p>
+        <p>Peter Gollwitzer at NYU has spent decades looking at what he calls implementation intentions, which is a fancy name for "if X time happens, I will do Y." His meta analysis across 94 studies found that people who set specific time and place plans followed through at roughly twice the rate of people who only set goals. The hourly slot is the "when" that a to-do list quietly leaves out.</p>
+        <p>An hour by hour schedule also handles a boring but real problem, which is decision fatigue. Every time you finish a task and stare at your list, you burn a small amount of willpower deciding what to do next. Do that thirty times a day and you end up drained by 3pm without producing much. When the choice is already made, you drop straight into the work without spending mental energy on the choosing.</p>
+        <p>Cal Newport, who wrote Deep Work, publishes his own hourly planning template that he uses every morning. He argues in the book that a 40 hour time blocked week produces the same output as a 60 hour reactive week. That number is anecdotal, not from a controlled trial, but it matches what a lot of writers, coders, and designers report once they stop working from a running to-do list.</p>
+        <p>Knowledge workers with fragmented calendars get the most out of this kind of planning. Students juggling classes, part time jobs, and study blocks. Freelancers who have no boss telling them when to start. Parents who need to protect an hour of focused work between school runs. People with ADHD often report that hourly planning gives them a scaffolding their brain does not build on its own, though results vary and it is not a substitute for other support.</p>
+        <p>Some people it does not suit. Emergency room nurses cannot plan hour by hour because their day is defined by whoever walks through the door. A construction site manager whose day is 80% radio traffic will find the same. If your job is pure reaction, a daily hourly schedule will mostly just annoy you.</p>
+        <p>Common mistakes people make without one are predictable. They confuse being busy with being productive. They start every day by opening email, which hands the day's priorities to strangers. They keep a running list of everything they should do but never assign any of it a time, so the important slow work keeps sliding to tomorrow. They finish Friday feeling exhausted and cannot list a single meaningful thing they did that week. None of this is a character flaw. It happens because most of us were taught how to make a list and never taught how to build a day.</p>
+
+        <h2>How to Use an Hourly Planner Effectively</h2>
+        <p>Filling in an hourly planner takes about ten minutes once you know the rhythm. Open the planner. Write in the fixed items first, the appointments and meetings and school pickups and classes you cannot move. These are the walls of your day. Everything else has to fit around them.</p>
+        <p>Look next at what actually needs to happen today. Not your whole life. Not your quarterly goals. Just today. Pick two or three anchors for the day, the pieces of work that matter most, and give each one a real slot with a real start and end time. A 90 minute writing block from 9am to 10:30am. A 45 minute call prep from 11am to 11:45am. Write them in with the actual task name, not a vague label like "work on stuff."</p>
+        <p>Fill the softer material now. Email in one or two batches instead of continuously. Admin in a short slot late morning or after lunch. Errands grouped together where possible. Reading time if you take it seriously. Meals, exercise, an actual walk outside if you can get one. The goal is not to account for every minute, it is to know what each hour is for.</p>
+        <p>Deciding what goes in each block is a judgment call and it gets easier with practice. A useful rule of thumb: if a task will take more than 30 minutes, it gets its own block. If it takes less, group it with similar small tasks into one admin block. Sending three quick Slack replies does not need three slots on your planner. It needs a fifteen minute chunk somewhere between larger blocks.</p>
+        <p>Interruptions are where most people give up on hourly planning after a week. The mistake is treating the schedule as a contract with yourself. It is not. It is a starting hypothesis about how your day will go. When your boss walks over with a real fire at 10:15am, you deal with the fire. Then, once it is out, you look at the planner and reschedule. Move the writing block to 2pm. Push the admin. Cut something that can wait until tomorrow. Adjusting the plan is part of the plan.</p>
+        <p>Some days the whole thing goes sideways by 11am. On those days, do not throw the planner in the trash. Take five minutes at lunch to rebuild the afternoon around what actually happened. Even one focused block salvaged from a chaotic morning beats reacting for the next six hours.</p>
+        <p>Morning planning and evening planning both work, and they work for different people. Evening planning has a clear advantage: you finish the day knowing what tomorrow looks like, so you sleep better and start faster. Morning planning has its own edge: you know how you actually slept, what energy you have, and what new information came in overnight. Try both for a week each and pick the one you actually stick with. The best system is the one you use, not the one that scored highest in a productivity book.</p>
+        <p>Free gaps in the day are worth thinking about deliberately. A random 25 minute window between a meeting that ended early and your next call is not automatically wasted. It is also not automatically productive. Decide in advance what those gaps are for. Some people use them as buffer time to catch up on the schedule. Others keep a short "gap list" of small tasks that fit in 15 to 30 minutes, like clearing a folder, filing expense receipts, replying to two nagging emails, or reading a saved article.</p>
+        <p>Time blocking and hourly scheduling get used as synonyms but they are slightly different. An hourly schedule is a grid: 9am does this, 10am does that, 11am does the next thing. Time blocking is the broader practice of assigning chunks of time to categories of work, and those chunks can be any length. A time block might be a two hour writing session that spans two rows of your hourly planner. Or a thirty minute admin block that lives inside one row. Every hourly planner uses time blocking. Not every time blocking system uses hourly grids.</p>
+        <p>Beginner mistakes usually cluster around a few patterns. Over scheduling is the biggest one. New users load ten hours of work into an eight hour day and then feel like failures by 3pm. Start by planning 60% of your day and let the rest breathe. Another common one is planning at the wrong grain, either writing "work" across four hours (too vague) or splitting every hour into six ten minute tasks (too granular). Aim for one clear activity per hour, or one activity across two hours if it is a deep work block. The last common trap is planning aspirationally, filling the day with what a fantasy version of you would do, not what the real you actually does. If you have never once done deep work at 6am, do not schedule deep work at 6am.</p>
+
+        <h2>Hourly Planner vs Other Planning Methods</h2>
+        <p>An hourly planner and a to-do list are answering different questions. A to-do list answers "what do I need to do?" An hourly planner answers "when am I actually going to do it?" Both matter, but only one of them forces you to admit that you have twelve hours of tasks and eight hours of day. A to-do list will happily grow to 47 items and never tell you that seven of them are not getting done today. An hourly schedule runs out of slots and forces the trade off out into the open. That is uncomfortable and it is the whole point.</p>
+        <p>Weekly planners work at a different altitude. They are for looking at Monday through Sunday and asking whether the important stuff has room to happen. Are you seeing friends this week? Is the report going to get finished? Do you have any exercise scheduled? A weekly view is where you notice that you have five meetings on Tuesday and none on Thursday and maybe you should move one. An hourly planner is where you execute inside a single day. Most people who plan well use both, weekly on Sunday evening and hourly each morning or the night before.</p>
+        <p>Calendar apps like Google Calendar or Outlook are close cousins of an hourly planner. The overlap is real. You can, in theory, drag events onto every hour and treat your calendar as a time blocking planner. Some people love this. Others find that the calendar's meeting culture leaks into their focus time. If your team can see your calendar and book anything that looks free, your carefully blocked writing hour turns into a meeting the moment someone needs a slot. A separate hourly planner, on paper or in a private app, keeps your intentional plan out of other people's booking view.</p>
+        <p>Time tracking software is a different animal entirely. Toggl, RescueTime, and Timing tell you where your hours actually went, after the fact. An hourly planner tells you where your hours should go, ahead of time. The two work well together. Plan the day with an hourly planner, track what happened with time tracking software, then compare on Friday. If you scheduled 15 hours of deep work and the tracker shows you did four, something is broken and now you have data instead of a vague feeling that this week was rough.</p>
+        <p>Paper planners keep beating digital ones for a specific reason. Writing something by hand slows you down enough to actually think about it. Typing "9am: work on report" takes two seconds and gets almost no thought. Writing it by hand takes six seconds and forces a small pause where your brain asks, "wait, is that really the right thing for 9am?" Research from Pam Mueller and Daniel Oppenheimer at Princeton and UCLA found that students who took notes by hand remembered concepts better than laptop typists, even though the typists wrote more words. The friction is the feature.</p>
+        <p>A printed page also does not ping you. A hourly planner sitting next to your keyboard cannot deliver a notification, an email preview, or a Slack red dot. Every time you look at it, you look at your plan. Every time you look at a planning app on your phone, you have a decent chance of getting sucked into something else before you close it.</p>
+        <p>Cases exist where an hourly planner is the wrong tool. If your job is reactive (dispatch, front desk, ER, on call devops), you cannot plan hour by hour and pretending you can will make you miserable. If your day has one thing on it and that thing takes eight hours, an hourly planner adds paperwork without adding clarity. If you are on vacation, the whole point is not to schedule. People who try to hourly plan a beach day are missing something more important than a productivity system.</p>
+
+        <h2>Time Blocking Strategies That Work With Hourly Planning</h2>
+        <p>Time blocking is the practice of assigning specific hours of your day to specific categories of work, and then defending those hours against everything else. When you fill in an hourly planner, you are doing time blocking whether you call it that or not. Every row on the planner is a block. The strategies below are how to make those blocks actually work instead of collapsing at the first interruption.</p>
+        <p>Deep work blocks and shallow work blocks are the first distinction worth making. Deep work is anything that needs your full attention for a stretch: writing, coding, designing, analyzing data, teaching yourself a hard concept, drafting a strategy document. Shallow work is everything else: email, most meetings, admin, expense reports, scheduling, quick approvals. The mistake is scattering shallow work through the day so it eats the gaps between deep work. Better to batch shallow tasks into one or two dedicated blocks (say 11am and 4pm) and protect the deep work blocks from any small task creeping in.</p>
+        <p>Energy mapping is the piece most people skip and then wonder why their schedule feels wrong. Your body is not equally sharp at every hour. Most people get a mental peak in the first two to four hours after waking up, a dip in the early afternoon (that post lunch fog is real, not imaginary), and a smaller second wind in the late afternoon. If you are a night owl, shift everything later by two or three hours. Map your own pattern for a week by noting when you felt sharp and when you felt fried, then schedule your hardest work in your sharpest hours. Doing your accounting at 10am when your brain is at 95% is wasting your best hours on tasks that a groggy 3pm you could handle fine.</p>
+        <p>Fixed blocks and flexible blocks work differently and both belong in your week. A fixed block sits at the same time every day, no negotiation. Morning writing from 8am to 10am. Exercise at 6pm. These become habits because they are boring and repeated. Flexible blocks move around based on what the day needs. Your afternoon might be a flexible block that swings between client work, admin, and reading depending on the week. Too many fixed blocks and your week gets rigid. Too many flexible ones and nothing important gets done consistently.</p>
+        <p>Theme days are a favorite of people who juggle a lot of different types of work. Monday is deep work day. Tuesday is meetings. Wednesday is content. Thursday is client work. Friday is admin and review. When you group similar work into whole days, you avoid the switching cost of jumping between very different kinds of thinking. Not everyone can pull this off. If your calendar is at the mercy of other people, theme days will get destroyed by the first meeting invite. But if you have any control over your week, batching work by day inside your hourly planner cuts a surprising amount of mental fatigue.</p>
+        <p>Buffer time is what separates a plan that survives contact with reality from one that shatters at 10:15am. A rough guide: for every three hours of scheduled work, add 30 minutes of unbooked buffer. Meetings run over. Tasks take longer than you thought. Someone urgently needs something. If your day is stacked wall to wall, the first hiccup pushes everything else off a cliff. If you have buffer, the day absorbs it.</p>
+        <p>The 80% rule is the version of buffer that most experienced planners settle on. Schedule 80% of your working hours. Leave 20% empty. For an eight hour day, that is roughly 90 minutes you do not touch. It feels wrong the first time you try it, like you are wasting time. What you are really doing is leaving room for the unpredictable stuff that always happens, which means the 80% you planned actually gets done instead of getting bumped to tomorrow.</p>
+
+        <h2>How to Build Your Ideal Daily Hourly Schedule</h2>
+        <p>Non negotiables come first, always. Before you get creative about deep work hours or morning routines, put in the things that will happen no matter what. School pickup at 3:15pm. Standing team meeting Tuesday at 10am. Kid's bedtime routine at 7:30pm. Class from 1pm to 2:30pm. If you skip this step, you will build a beautiful schedule and then watch it explode when reality shows up. Once the non negotiables are down, you can see what real estate you actually have to work with.</p>
+        <p>Mapping your energy takes a week of paying attention. Keep a small note for a week (morning, midday, mid afternoon, evening) and rate your mental sharpness from 1 to 5. Look at the pattern. Most people find they have a clear high energy window, usually somewhere between 7am and 11am or between 4pm and 8pm. Some people have two windows separated by a slump. Whatever pattern you find, that is your real energy shape, not the one the productivity books assume.</p>
+        <p>Deep work goes in your peak hours, period. If your sharpest window is 8am to 11am and you spend that window on email, you are burning premium fuel on something a much less alert version of you could do. Move the demanding work into the peak and push shallow tasks into the low energy times. This one change often produces bigger results than any other adjustment to a schedule.</p>
+        <p>Breaks and transition time are not optional. Between blocks of different kinds of work, leave five or ten minutes to reset. Stand up, drink water, look out a window. If you skip transitions, you drag the residue of the last task into the next one, which is a known effect called attention residue. Sophie Leroy at the University of Washington documented this in a 2009 study. People who switched tasks without a clean break performed worse on the new task because part of their brain was still on the old one.</p>
+        <p>Here is what a sample workday might look like for someone in an office job: 7am wake up and coffee, 7:30am to 8:30am morning routine and commute, 8:30am to 9am plan the day and check urgent messages, 9am to 11am deep work block, 11am to 11:30am email batch, 11:30am to 12:30pm meeting block, 12:30pm to 1:30pm lunch and walk, 1:30pm to 3pm second work block, 3pm to 3:30pm admin, 3:30pm to 4:30pm meetings or calls, 4:30pm to 5:30pm wrap up and plan tomorrow. That is one shape, not the shape.</p>
+        <p>Students will see a different pattern. A rough version: 7am wake up, 7:30am to 8:30am breakfast and review notes, 9am to 12pm lectures, 12pm to 1pm lunch, 1pm to 3pm study block for the hardest subject, 3pm to 4pm walk or gym, 4pm to 6pm readings and problem sets, 6pm to 7pm dinner, 7pm to 9pm study or group project time, 9pm onward free time. Notice the hardest subject gets the post lunch slot only if that is when the student is actually sharp. If they are foggy after lunch, that block moves to the morning.</p>
+        <p>Freelancers need more discipline because no one is enforcing the schedule. Something like: 8am wake up, 8:30am to 9:30am admin and inbox triage, 9:30am to 12pm deep client work, 12pm to 1pm lunch and walk, 1pm to 2:30pm meetings or discovery calls, 2:30pm to 4:30pm second client block, 4:30pm to 5:30pm business development (outreach, proposals, portfolio work), 5:30pm to 6pm wrap up and tomorrow's plan. The end of day plan is worth defending. Freelancers who skip it start every morning from cold, which costs an hour.</p>
+        <p>How long you keep the same schedule before changing it depends on how well it fits. A rough guide is to run any new schedule for two full weeks before judging it. The first week feels awkward because it is new. The second week gives you actual data. If after two weeks it still fights you every day, change the parts that hurt most. If it mostly works, keep it for a month or two before revising. The people who tinker with their schedule every three days never build the habits that make any schedule work.</p>
+
+        <h2>Printable Hourly Planner Tips and Best Practices</h2>
+        <p>Printing a planner does something no app does. It puts a physical object on your desk that competes for your attention with your screen and usually wins. When your printable hourly planner is lying next to your laptop, glancing down at it takes half a second and gives you your plan. Glancing at a planning app on your phone means picking up the phone, unlocking it, opening the app, and, statistically, ending up somewhere else within two minutes. The paper wins because it is friction free in the right direction and friction heavy in the wrong direction.</p>
+        <p>Using a printed planner alongside digital tools works well if you keep the roles clean. The paper holds the day's plan. Your calendar app holds meetings and shared appointments. Your task app or notes hold the master list of everything you might do this week. In the morning, you look at the calendar and task list, then transfer today's decisions to the paper. During the day, you look at the paper. This split avoids the trap of trying to make one tool do everything and failing at all of it.</p>
+        <p>Paper size matters more than people expect. A4 and Letter are the two standard sizes, and most free hourly planner templates you download will come in both. A4 (210 by 297 mm) is standard everywhere except the US. Letter (8.5 by 11 inches) is the US default. Print the size that matches your printer's default paper, or you will end up with margins cut off or the layout squeezed. If you want to carry the planner around in a bag, half size (A5 or half letter) prints two per page and folds into a smaller notebook.</p>
+        <p>Filling in a printed planner works best as a short morning ritual. Sit down before you open email or Slack. Take four or five minutes. Write in the fixed items first, then the anchors for the day, then the softer stuff. Use pencil if you like to erase and rework, or a regular pen if you are okay with crossing things out. Do not decorate. This is a working document, not a bullet journal spread. The prettier you try to make it, the less you will actually use it.</p>
+        <p>Color coding is worth trying but only if you keep it simple. Two colors is plenty. Blue for work, black for personal. Or black for planned items, red for anything urgent that shows up during the day. When people try to code with six colors for six categories, they spend more time picking pens than doing work. If you cannot remember what your color system means without looking it up, it is too complicated.</p>
+        <p>Completed printed planners are worth keeping for a while. A stack of last month's planners is a rough record of what you actually did with your time, which comes in handy when someone asks "what have you been working on?" and your brain goes blank. Some people file them by month, some scan them into Evernote or Notion, most just keep the last two weeks in a small tray and toss the rest. If you want to get analytical, at the end of each week, look back at the planner and note where your time actually went versus where you thought it went. Patterns you would never catch in real time will jump off the page.</p>
+
+        <h2>Frequently Asked Questions About Hourly Planners</h2>
+
+        <h3>What is the best way to start using an hourly planner?</h3>
+        <p>Plan a single day, tomorrow, in about ten minutes tonight. Do not try to build a system for your whole life on day one. Write down your fixed items first, then pick three real tasks you want to do tomorrow and assign each one a specific hour. Leave the rest of the day loose. See what happens. Adjust the next night. After a week of this, you will have a version that fits your actual life better than any template someone else designed, and the habit will feel less like homework.</p>
+
+        <h3>How many tasks should I put in each hour?</h3>
+        <p>One is usually right. Sometimes two if they are both small and related, like "reply to Anna, then draft the meeting agenda." Fitting three or more tasks into a single hour usually means either the tasks are tiny (in which case batch them into a larger admin block) or you are being unrealistic about how long things take. Real work has friction, context switching costs, and thinking time built in. If you consistently blow past your one hour blocks, your tasks are probably bigger than you think and the answer is fewer tasks per hour.</p>
+
+        <h3>What should I do if I fall behind my hourly schedule?</h3>
+        <p>Stop for two minutes. Look at what is left in the day and decide what actually needs to happen versus what can slide to tomorrow. Move the important remaining block into the next open slot and cut something that can wait. Falling behind is not a signal to abandon the planner, it is the situation the planner was built for. The people who get value out of hourly planning are the ones who rebuild the day at lunch when the morning went sideways, not the ones who follow a plan perfectly (nobody actually does).</p>
+
+        <h3>Is an hourly planner better than a to-do list?</h3>
+        <p>For most people, yes, but they solve different problems. A to-do list is a memory aid. An hourly planner is an execution tool. Your to-do list will happily grow to fifty items and never force you to admit you cannot do all of them today. An hourly planner runs out of slots and makes the trade off obvious. The two work best together. Keep a running to-do list of everything you might do this week or month, then each morning move a small subset into hourly slots for that specific day.</p>
+
+        <h3>How is an hourly planner different from a calendar?</h3>
+        <p>A calendar mostly holds appointments, meetings, and things involving other people. An hourly planner holds your intended plan for the whole day, including the solo work that never makes it onto a calendar. If you block "9am to 11am, write the report" on your calendar, it is public, bookable, and often gets overridden by someone else's meeting request. On a private hourly planner, that same block stays yours. Some people use their calendar as an hourly planner successfully, but most find they need a separate space for personal time blocking.</p>
+
+        <h3>Should I plan every hour of my day?</h3>
+        <p>No. Aim to schedule 60 to 80% of your working hours and leave the rest as buffer. Life happens. Meetings run long. A colleague drops by. You need ten minutes to actually think about something. A day that is booked wall to wall shatters at the first surprise and never recovers. Buffer time is not wasted time, it is what makes the planned time actually work. Also, if you are trying to schedule your evenings and weekends the same way you schedule work hours, ask yourself whether you really want to live that way.</p>
+
+        <h3>What time should I start my hourly planner?</h3>
+        <p>Whenever your day actually starts. If you wake up at 6am and want to plan a morning workout, start at 6am. If your work day starts at 9am and mornings are personal, start there. There is no universal correct start time. The template you use should match how you live, not force you into someone else's shape. Most people find their planner useful from about an hour before work starts until about an hour after work ends, though shift workers, students, and parents all have different natural windows depending on their life.</p>
+
+        <h3>How do I handle meetings and fixed appointments in an hourly planner?</h3>
+        <p>Meetings and appointments go in first, before anything else. They are the immovable walls of your day. Write them in with the start and end time and the actual name, not a vague label. Then build the rest of the day around them. If a meeting sits at 10am to 11am and you have a 90 minute deep work task, put it from 8am to 9:30am (with time to wrap up before the meeting) or from 11:30am to 1pm, not from 9:30am to 11am where it will get truncated by prep time and mental switching costs.</p>
+
+        <h3>Can I use an hourly planner for personal time not just work?</h3>
+        <p>Yes, and a lot of people find this is where an hourly planner earns its keep. Personal time evaporates faster than work time because nothing enforces it. If you do not schedule the gym, the reading time, the walk, the call with your mom, they get eaten by whatever is louder. You do not have to schedule every minute of the evening, but blocking out a couple of anchor items (dinner, one hour of reading, phone call at 8pm) makes the difference between a satisfying evening and one where you scrolled from 6pm to bedtime.</p>
+
+        <h3>How detailed should each time block be?</h3>
+        <p>Detailed enough that you know what to do the moment you look at it, and no more. "Work" is too vague. "Draft the intro paragraph of the Q3 report" is the right grain. If you have to think for two minutes about what a block means, it needs more detail. If the description is longer than the task itself, it needs less. A good test: if a coworker glanced at your planner, could they tell what you were supposed to be doing at 10:30am? If yes, you are at the right grain.</p>
+
+        <h3>What is the difference between time blocking and an hourly schedule?</h3>
+        <p>An hourly schedule is one specific form of time blocking. Time blocking is the broader practice of assigning chunks of time to categories of work, and those chunks can be any length. A time block might be a 25 minute Pomodoro or a four hour deep work session. An hourly schedule specifically breaks the day into one hour rows and asks you what each row is for. Every hourly schedule is a form of time blocking. Not every time blocking system uses hourly grids. Practically, the terms get used interchangeably and it rarely matters.</p>
+
+        <h3>Is it better to plan the night before or morning of?</h3>
+        <p>Try both and see which one you actually stick with. Evening planning has a strong argument. You finish the day knowing what tomorrow looks like, you sleep better because your brain is not looping over unfinished business, and you start the morning already in motion. Morning planning also has an argument. You know how you slept, you have any new information that came in overnight, and you can match the plan to your actual energy that day. The people who succeed with hourly planning long term usually settle on one or the other, not both.</p>
+      </article>
+
+
+      <section class="output-cta" id="output">
+        <div class="output-cta-inner">
+          <div>
+            <h2><span class="display">Plan once.</span><span class="hand">Stay in control.</span></h2>
+            <p class="lede">Create your ideal day, every day.</p>
+            <button type="button" class="btn btn-lime" id="cta-start-btn">Start Planning Now &rarr;</button>
+            <p class="output-note">Your plan.<br>Your paper.<br>Your success.</p>
+          </div>
+          <div class="output-cards">
+            <div class="output-card">
+              <h3>One-Click Print</h3>
+              <p>Clean layout optimized for A4 &amp; Letter.</p>
+              <button type="button" class="btn btn-ghost btn-on-navy" id="cta-print-btn">Print</button>
+            </div>
+            <div class="output-card">
+              <h3>Download PDF</h3>
+              <p>Save your plan as PDF.</p>
+              <button type="button" class="btn btn-ghost btn-on-navy" id="cta-pdf-btn">Save as PDF</button>
+            </div>
+            <div class="output-card">
+              <h3>Download Image</h3>
+              <p>Save as PNG for sharing or backup.</p>
+              <button type="button" class="btn btn-ghost btn-on-navy" id="cta-png-btn">Save as PNG</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section" id="about">
+        <h2>About netgig.online</h2>
+        <p>netgig.online builds small, focused browser tools that work without accounts, downloads or ads. The Hourly Planner is a free way to sketch out a day and print it — nothing else installed, nothing tracked.</p>
+      </section>
+
+      <section class="related-tools">
+        <h2 class="small-ui">Related Tools</h2>
+        <ul>
+          <li><a href="/hourly-schedule-template/">Hourly Schedule Template</a></li>
+          <li><a href="/daily-hourly-schedule/">Daily Hourly Schedule</a></li>
+          <li><a href="/hour-by-hour-schedule/">Hour by Hour Schedule</a></li>
+        </ul>
+        <p class="all-tools-link"><a href="/">&larr; All tools</a></p>
+      </section>
+
+      <footer class="site-footer">
+        <p>&copy; 2026 netgig.online</p>
+        <nav>
+          <a href="#about">Privacy Policy</a>
+          <a href="#about">Terms</a>
+          <a href="#about">Contact</a>
+        </nav>
+      </footer>
+
+    </main>
   </div>
 
-  <div id="schedule" class="schedule"
-       data-start="08:00"
-       data-end="18:00"
-       data-interval="30"
-       data-variant="standard">
-
-    <div class="schedule-row">
-      <div class="time-label">08:00</div>
-      <div class="task-cell">
-        <span class="empty-hint">Start typing to add a task</span>
-      </div>
+  <div class="focus-overlay" id="focus-overlay" hidden>
+    <button type="button" class="btn focus-exit" id="focus-exit-btn">Exit (Esc)</button>
+    <div class="focus-current">
+      <p class="kicker" id="focus-kicker">UP NEXT</p>
+      <h2 id="focus-title">Task</h2>
+      <p class="time" id="focus-time"></p>
     </div>
-
-    <div class="schedule-row">
-      <div class="time-label">08:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">09:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">09:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">10:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">10:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">11:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">11:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">12:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">12:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">13:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">13:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">14:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">14:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">15:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">15:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">16:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">16:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">17:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">17:30</div>
-      <div class="task-cell">
-      </div>
-    </div>
-
-    <div class="schedule-row">
-      <div class="time-label">18:00</div>
-      <div class="task-cell">
-      </div>
-    </div>
+    <p class="focus-next" id="focus-next"></p>
   </div>
 
-  <section class="related-tools">
-    <h2>Related Tools</h2>
-    <ul>
-      <li><a href="../../hourly-schedule-template/">Hourly Schedule Template</a></li>
-      <li><a href="../../daily-hourly-schedule/">Daily Hourly Schedule</a></li>
-      <li><a href="../../hour-by-hour-schedule/">Hour by Hour Schedule</a></li>
-    </ul>
-    <p><a href="../../">← All tools</a></p>
-  </section>
+  <div class="toast" id="toast"></div>
 
-  <footer class="site-footer">
-    <p>netgig.online</p>
-  </footer>
-
-  <script src="../../src/planner.js"></script>
+  <script src="/src/planner.js"></script>
 </body>
 </html>
