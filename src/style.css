@@ -1137,6 +1137,44 @@ ul { list-style: none; }
   margin-bottom: 0.5rem;
 }
 
+.page-article ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.page-article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.page-article caption {
+  text-align: left;
+  font-weight: 600;
+  color: var(--navy);
+  padding-bottom: 0.5rem;
+}
+
+.page-article th,
+.page-article td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.5;
+}
+
+.page-article thead th {
+  font-weight: 700;
+  color: var(--navy);
+  border-bottom: 2px solid var(--border);
+}
+
+.page-article a {
+  color: var(--navy);
+  text-decoration: underline;
+}
+
 /* --- About --- */
 .about-section {
   padding-block: 36px;
@@ -1482,7 +1520,7 @@ ul { list-style: none; }
     margin-bottom: 6mm;
   }
 
-  .print-header h1 {
+  .print-header .print-title {
     font-family: var(--font-display);
     font-size: 22pt;
     color: #000;
