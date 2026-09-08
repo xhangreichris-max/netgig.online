@@ -23,31 +23,40 @@
       "start": "08:00",
       "end": "18:00",
       "interval": 60,
-      "show_article": false
+      "show_article": true,
+      "article_file": "article-hourly-schedule-template.html",
+      "faq_count": 8,
+      "lastmod": "2026-09-08"
     },
     {
       "slug": "daily-hourly-schedule",
-      "title": "Daily Hourly Schedule Maker - Free Printable Planner",
+      "title": "Daily Hourly Schedule Maker | Plan Your Full Day",
       "tool_label": "Daily Hourly Schedule",
       "hero_line1": "YOUR WHOLE DAY,",
       "hero_line2": "HOUR BY HOUR.",
-      "description": "Plan your full day hour by hour, from morning to night. Print a clean daily schedule you can write on. Free, no account.",
+      "description": "Build a daily hourly schedule for work, school, or shift rotations. Free tool with sample routines and printable output. No account needed.",
       "start": "07:00",
       "end": "22:00",
       "interval": 60,
-      "show_article": false
+      "show_article": true,
+      "article_file": "article-daily-hourly-schedule.html",
+      "faq_count": 8,
+      "lastmod": "2026-09-08"
     },
     {
       "slug": "hour-by-hour-schedule",
-      "title": "Hour by Hour Schedule Planner - Free and Printable",
+      "title": "Hour by Hour Schedule for Time Blocking",
       "tool_label": "Hour by Hour Schedule",
       "hero_line1": "TIME BLOCKED.",
       "hero_line2": "DONE RIGHT.",
-      "description": "Break your day into hourly blocks and print the result. Built for time blocking. No download, no account, works in any browser.",
+      "description": "See how an hour by hour schedule supports time blocking, task batching, and a weekly planning grid you can build in minutes.",
       "start": "06:00",
       "end": "22:00",
       "interval": 60,
-      "show_article": false
+      "show_article": true,
+      "article_file": "article-hour-by-hour-schedule.html",
+      "faq_count": 8,
+      "lastmod": "2026-09-08"
     }
   ]
 }

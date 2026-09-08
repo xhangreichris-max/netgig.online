@@ -25,7 +25,13 @@ ASSETS = os.path.join(ROOT, "assets")
 CONFIG_PATH = os.path.join(ROOT, "pages-config.json")
 TEMPLATE_PATH = os.path.join(ROOT, "template.html")
 INDEX_TEMPLATE_PATH = os.path.join(ROOT, "template_index.html")
-ARTICLE_PATH = os.path.join(ROOT, "article-hourly-planner.html")
+DEFAULT_ARTICLE_FILE = "article-hourly-planner.html"
+
+
+def get_article_path(page):
+    """Resolve a page's article file, defaulting to the hourly-planner article
+    for backward compatibility with pages that don't set article_file."""
+    return os.path.join(ROOT, page.get("article_file", DEFAULT_ARTICLE_FILE))
 
 
 def copy_dir(src, dest, label):
@@ -143,8 +149,9 @@ def build_jsonld(page, base_url):
     """Build the page's JSON-LD block: WebApplication alone, or a
     [WebApplication, FAQPage] array on pages that show the FAQ article."""
     schemas = [build_webapp_jsonld(page, base_url)]
-    if page.get("show_article") and os.path.isfile(ARTICLE_PATH):
-        schemas.append(build_faq_jsonld(ARTICLE_PATH))
+    article_path = get_article_path(page)
+    if page.get("show_article") and os.path.isfile(article_path):
+        schemas.append(build_faq_jsonld(article_path, page.get("faq_count", 3)))
     data = schemas[0] if len(schemas) == 1 else schemas
     return json.dumps(data, indent=4)
 
@@ -185,7 +192,7 @@ def generate_page(page, template, all_pages, base_url):
     html = html.replace("{{RELATED_LINKS}}", related)
 
     if page.get("show_article"):
-        article_html = open(ARTICLE_PATH, encoding="utf-8").read()
+        article_html = open(get_article_path(page), encoding="utf-8").read()
     else:
         article_html = ""
     html = html.replace("{{ARTICLE_CONTENT}}", article_html)
@@ -214,17 +221,17 @@ SITEMAP_LASTMOD = "2026-08-23"
 def generate_sitemap(pages, base_url):
     """Generate sitemap.xml: homepage + all tool pages, trailing slash,
     lastmod/changefreq/priority on every entry."""
-    entries = [(f"{base_url}/", "0.9")]
+    entries = [(f"{base_url}/", "0.9", SITEMAP_LASTMOD)]
     for p in pages:
         priority = "1.0" if p["slug"] == "hourly-planner" else "0.8"
-        entries.append((f"{base_url}/{p['slug']}/", priority))
+        entries.append((f"{base_url}/{p['slug']}/", priority, p.get("lastmod", SITEMAP_LASTMOD)))
 
     urls = []
-    for loc, priority in entries:
+    for loc, priority, lastmod in entries:
         urls.append(
             f"  <url>\n"
             f"    <loc>{loc}</loc>\n"
-            f"    <lastmod>{SITEMAP_LASTMOD}</lastmod>\n"
+            f"    <lastmod>{lastmod}</lastmod>\n"
             f"    <changefreq>weekly</changefreq>\n"
             f"    <priority>{priority}</priority>\n"
             f"  </url>"
