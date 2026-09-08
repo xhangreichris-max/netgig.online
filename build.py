@@ -253,6 +253,14 @@ def generate_robots(base_url):
     )
 
 
+def generate_cname(base_url):
+    """Generate the CNAME file GitHub Pages needs to serve the custom
+    domain. Without this in docs/, the gh-pages deploy action (which does
+    a clean sync from docs/) wipes any CNAME added directly to gh-pages."""
+    domain = base_url.split("://", 1)[-1]
+    return f"{domain}\n"
+
+
 def generate_llms_txt():
     """Generate llms.txt."""
     return textwrap.dedent("""\
@@ -305,6 +313,10 @@ def main():
     # Generate robots.txt
     robots = generate_robots(base_url)
     write_file(os.path.join(DOCS, "robots.txt"), robots)
+
+    # Generate CNAME (required for GitHub Pages custom domain)
+    cname = generate_cname(base_url)
+    write_file(os.path.join(DOCS, "CNAME"), cname)
 
     # Generate llms.txt
     llms = generate_llms_txt()
