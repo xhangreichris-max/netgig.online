@@ -1175,6 +1175,19 @@ ul { list-style: none; }
   text-decoration: underline;
 }
 
+.article-featured {
+  margin: 0 0 2rem;
+  width: 100%;
+}
+
+.article-featured img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
 /* --- About --- */
 .about-section {
   padding-block: 36px;
@@ -1495,6 +1508,7 @@ ul { list-style: none; }
   .about-section,
   .related-tools,
   .page-article,
+  .article-featured,
   .site-footer,
   .free-gap,
   .task-menu,
