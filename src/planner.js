@@ -355,7 +355,7 @@
       el.style.top = ((gap.start - r.start) * pxPerMin) + 'px';
       el.style.height = ((gap.end - gap.start) * pxPerMin) + 'px';
       var mins = gap.end - gap.start;
-      el.textContent = 'FREE — ' + mins + ' MIN';
+      el.textContent = 'FREE ' + mins + ' MIN';
       el.addEventListener('click', function () {
         var duration = Math.min(mins, 240);
         var task = addTask('', 'general', duration);

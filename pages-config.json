@@ -1,5 +1,9 @@
 {
   "base_url": "https://netgig.online",
+  "home": {
+    "title": "Free Online Hourly Planner - Plan and Print in Seconds",
+    "description": "Plan your day and print in 20 seconds. Four free scheduling tools, no sign up, no downloads, nothing stored on our servers."
+  },
   "pages": [
     {
       "slug": "hourly-planner",
@@ -8,12 +12,14 @@
       "hero_line1": "PLANNED",
       "hero_line2": "YOUR WAY.",
       "description": "Free hourly planner generator. No login. No ads. Just plan and print.",
+      "card_description": "The general-purpose planner for mapping any day hour by hour, from a blank slate to a finished schedule.",
       "start": "08:00",
       "end": "18:00",
       "interval": 30,
       "show_article": true,
       "featured_image": "hourly-planner-notebook-schedule.webp",
-      "featured_image_alt": "Open notebook showing a handwritten hourly schedule with a pencil resting on the page"
+      "featured_image_alt": "Open notebook showing a handwritten hourly schedule with a pencil resting on the page",
+      "card_image": "cards/hourly-planner-card.webp"
     },
     {
       "slug": "hourly-schedule-template",
@@ -22,6 +28,7 @@
       "hero_line1": "YOUR TEMPLATE.",
       "hero_line2": "YOUR HOURS.",
       "description": "Fill in an hourly schedule template online and print it straight away. Set your own hours and intervals. No sign up needed.",
+      "card_description": "Printable and editable layouts, with a walkthrough for building your own in Excel or Google Sheets.",
       "start": "08:00",
       "end": "18:00",
       "interval": 60,
@@ -30,7 +37,8 @@
       "faq_count": 8,
       "lastmod": "2026-09-08",
       "featured_image": "hourly-schedule-template-printable-sheets.webp",
-      "featured_image_alt": "Four printable hourly schedule template sheets in different layouts spread on a desk"
+      "featured_image_alt": "Four printable hourly schedule template sheets in different layouts spread on a desk",
+      "card_image": "cards/hourly-schedule-template-card.webp"
     },
     {
       "slug": "daily-hourly-schedule",
@@ -39,6 +47,7 @@
       "hero_line1": "YOUR WHOLE DAY,",
       "hero_line2": "HOUR BY HOUR.",
       "description": "Build a daily hourly schedule for work, school, or shift rotations. Free tool with sample routines and printable output. No account needed.",
+      "card_description": "Sample routines for students, remote workers, shift workers, and parents, including shift rotation patterns.",
       "start": "07:00",
       "end": "22:00",
       "interval": 60,
@@ -47,7 +56,8 @@
       "faq_count": 8,
       "lastmod": "2026-09-08",
       "featured_image": "daily-hourly-schedule-routines.webp",
-      "featured_image_alt": "Four desk setups representing student, remote worker, shift worker, and parent daily routines"
+      "featured_image_alt": "Four desk setups representing student, remote worker, shift worker, and parent daily routines",
+      "card_image": "cards/daily-hourly-schedule-card.webp"
     },
     {
       "slug": "hour-by-hour-schedule",
@@ -56,6 +66,7 @@
       "hero_line1": "TIME BLOCKED.",
       "hero_line2": "DONE RIGHT.",
       "description": "See how an hour by hour schedule supports time blocking, task batching, and a weekly planning grid you can build in minutes.",
+      "card_description": "A guide to time blocking, deep work blocks, and building a weekly planning grid.",
       "start": "06:00",
       "end": "22:00",
       "interval": 60,
@@ -64,7 +75,8 @@
       "faq_count": 8,
       "lastmod": "2026-09-08",
       "featured_image": "hour-by-hour-schedule-time-blocking.webp",
-      "featured_image_alt": "Paper cards arranged as time blocks showing deep work and buffer periods"
+      "featured_image_alt": "Paper cards arranged as time blocks showing deep work and buffer periods",
+      "card_image": "cards/hour-by-hour-schedule-card.webp"
     }
   ]
 }

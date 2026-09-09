@@ -255,19 +255,54 @@ def generate_page(page, template, all_pages, base_url):
     return html
 
 
-def generate_index(index_template, all_pages):
-    """Generate docs/index.html from template_index.html."""
-    links = []
+def build_website_jsonld(base_url):
+    """Build JSON-LD WebSite schema for the homepage."""
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "netgig.online",
+        "url": f"{base_url}/"
+    }
+    return json.dumps(schema, indent=4)
+
+
+def build_tool_cards(all_pages):
+    """Build the homepage's image-card HTML, one per tool page, driven by
+    pages-config.json (card_image, featured_image_alt, card_description).
+    Uses the smaller 600x315 card_image, not the full-size featured_image
+    (that one stays on the article pages, untouched)."""
+    cards = []
     for p in all_pages:
-        links.append(
-            f'    <a class="tool-card" href="{p["slug"]}/">\n'
-            f'      <div class="tool-name">{p["tool_label"]}</div>\n'
-            f'      <p class="tool-desc">{p["description"]}</p>\n'
-            f'      <span class="tool-link">Open tool &rarr;</span>\n'
-            f'    </a>'
+        alt = p.get("featured_image_alt", p["tool_label"])
+        cards.append(
+            f'      <a class="tool-card-img" href="/{p["slug"]}/">\n'
+            f'        <img src="/assets/{p["card_image"]}" alt="{alt}" '
+            f'width="600" height="315" loading="lazy" decoding="async">\n'
+            f'        <div class="tool-card-body">\n'
+            f'          <h3>{p["tool_label"]}</h3>\n'
+            f'          <p>{p["card_description"]}</p>\n'
+            f'          <span class="tool-card-link">Open tool &rarr;</span>\n'
+            f'        </div>\n'
+            f'      </a>'
         )
-    tool_links = "\n".join(links)
-    return index_template.replace("{{TOOL_LINKS}}", tool_links)
+    return "\n".join(cards)
+
+
+def generate_index(index_template, all_pages, home_config, base_url):
+    """Generate docs/index.html from template_index.html."""
+    canonical = f"{base_url}/"
+    og_url = f"{base_url}/assets/{DEFAULT_OG_IMAGE}"
+    jsonld = build_website_jsonld(base_url)
+    tool_cards = build_tool_cards(all_pages)
+
+    html = index_template
+    html = html.replace("{{TITLE}}", home_config["title"])
+    html = html.replace("{{DESCRIPTION}}", home_config["description"])
+    html = html.replace("{{CANONICAL_URL}}", canonical)
+    html = html.replace("{{OG_IMAGE_URL}}", og_url)
+    html = html.replace("{{JSONLD}}", jsonld)
+    html = html.replace("{{TOOL_CARDS}}", tool_cards)
+    return html
 
 
 SITEMAP_LASTMOD = "2026-08-23"
@@ -358,7 +393,8 @@ def main():
         write_file(out_path, html)
 
     # Generate index
-    index_html = generate_index(index_template, pages)
+    home_config = config.get("home", {})
+    index_html = generate_index(index_template, pages, home_config, base_url)
     write_file(os.path.join(DOCS, "index.html"), index_html)
 
     # Generate sitemap
