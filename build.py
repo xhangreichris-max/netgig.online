@@ -26,6 +26,7 @@ CONFIG_PATH = os.path.join(ROOT, "pages-config.json")
 TEMPLATE_PATH = os.path.join(ROOT, "template.html")
 INDEX_TEMPLATE_PATH = os.path.join(ROOT, "template_index.html")
 DEFAULT_ARTICLE_FILE = "article-hourly-planner.html"
+DEFAULT_OG_IMAGE = "og-image-1200x630.webp"
 
 
 def get_article_path(page):
@@ -102,7 +103,7 @@ def build_static_track(hour_marks):
 
 def build_webapp_jsonld(page, base_url):
     """Build JSON-LD WebApplication schema."""
-    return {
+    schema = {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": page["tool_label"],
@@ -115,6 +116,9 @@ def build_webapp_jsonld(page, base_url):
             "priceCurrency": "USD"
         }
     }
+    if page.get("featured_image"):
+        schema["image"] = f"{base_url}/assets/{page['featured_image']}"
+    return schema
 
 
 def build_faq_jsonld(article_path, count=3):
@@ -156,6 +160,50 @@ def build_jsonld(page, base_url):
     return json.dumps(data, indent=4)
 
 
+def build_og_image(page, base_url):
+    """Return (url, width, height, alt) for the page's OG/Twitter image,
+    falling back to the site default when no featured_image is set."""
+    if page.get("featured_image"):
+        return (
+            f"{base_url}/assets/{page['featured_image']}",
+            "1200",
+            "630",
+            page.get("featured_image_alt", page["title"]),
+        )
+    return (f"{base_url}/assets/{DEFAULT_OG_IMAGE}", "1200", "630", page["title"])
+
+
+def build_featured_image_figure(page):
+    """Return the <figure> markup for a page's article featured image,
+    or an empty string when the page has no featured_image."""
+    if not page.get("featured_image"):
+        return ""
+    alt = page.get("featured_image_alt", "")
+    return (
+        '<figure class="article-featured">\n'
+        f'          <img src="/assets/{page["featured_image"]}"\n'
+        f'               alt="{alt}"\n'
+        '               width="1200"\n'
+        '               height="630"\n'
+        '               loading="lazy"\n'
+        '               decoding="async">\n'
+        '        </figure>\n'
+    )
+
+
+def insert_featured_image(article_html, figure_html):
+    """Insert the featured image figure right after the article's first
+    h2 (its title) and before the first paragraph."""
+    if not figure_html:
+        return article_html
+    return re.sub(
+        r"</h2>\s*\n",
+        lambda m: m.group(0) + "        " + figure_html,
+        article_html,
+        count=1,
+    )
+
+
 def build_related_links(current_slug, all_pages):
     """Build HTML list items linking to all other tool pages."""
     links = []
@@ -175,11 +223,16 @@ def generate_page(page, template, all_pages, base_url):
     static_track = build_static_track(hour_marks)
     jsonld = build_jsonld(page, base_url)
     related = build_related_links(page["slug"], all_pages)
+    og_url, og_width, og_height, og_alt = build_og_image(page, base_url)
 
     html = template
     html = html.replace("{{TITLE}}", page["title"])
     html = html.replace("{{DESCRIPTION}}", page["description"])
     html = html.replace("{{CANONICAL_URL}}", canonical)
+    html = html.replace("{{OG_IMAGE_URL}}", og_url)
+    html = html.replace("{{OG_IMAGE_WIDTH}}", og_width)
+    html = html.replace("{{OG_IMAGE_HEIGHT}}", og_height)
+    html = html.replace("{{OG_IMAGE_ALT}}", og_alt)
     html = html.replace("{{TOOL_LABEL}}", page["tool_label"])
     html = html.replace("{{HERO_LINE1}}", page["hero_line1"])
     html = html.replace("{{HERO_LINE2}}", page["hero_line2"])
@@ -193,6 +246,8 @@ def generate_page(page, template, all_pages, base_url):
 
     if page.get("show_article"):
         article_html = open(get_article_path(page), encoding="utf-8").read()
+        figure_html = build_featured_image_figure(page)
+        article_html = insert_featured_image(article_html, figure_html)
     else:
         article_html = ""
     html = html.replace("{{ARTICLE_CONTENT}}", article_html)

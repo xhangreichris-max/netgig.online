@@ -11,7 +11,9 @@
       "start": "08:00",
       "end": "18:00",
       "interval": 30,
-      "show_article": true
+      "show_article": true,
+      "featured_image": "hourly-planner-notebook-schedule.webp",
+      "featured_image_alt": "Open notebook showing a handwritten hourly schedule with a pencil resting on the page"
     },
     {
       "slug": "hourly-schedule-template",
@@ -26,7 +28,9 @@
       "show_article": true,
       "article_file": "article-hourly-schedule-template.html",
       "faq_count": 8,
-      "lastmod": "2026-09-08"
+      "lastmod": "2026-09-08",
+      "featured_image": "hourly-schedule-template-printable-sheets.webp",
+      "featured_image_alt": "Four printable hourly schedule template sheets in different layouts spread on a desk"
     },
     {
       "slug": "daily-hourly-schedule",
@@ -41,7 +45,9 @@
       "show_article": true,
       "article_file": "article-daily-hourly-schedule.html",
       "faq_count": 8,
-      "lastmod": "2026-09-08"
+      "lastmod": "2026-09-08",
+      "featured_image": "daily-hourly-schedule-routines.webp",
+      "featured_image_alt": "Four desk setups representing student, remote worker, shift worker, and parent daily routines"
     },
     {
       "slug": "hour-by-hour-schedule",
@@ -56,7 +62,9 @@
       "show_article": true,
       "article_file": "article-hour-by-hour-schedule.html",
       "faq_count": 8,
-      "lastmod": "2026-09-08"
+      "lastmod": "2026-09-08",
+      "featured_image": "hour-by-hour-schedule-time-blocking.webp",
+      "featured_image_alt": "Paper cards arranged as time blocks showing deep work and buffer periods"
     }
   ]
 }
